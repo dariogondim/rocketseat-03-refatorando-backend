@@ -6,7 +6,7 @@ import routes from './routes';
 
 import AppError from './errors/AppError';
 
-import uploadConfig from './config/upload';
+import uploadConfig from '../../../config/upload';
 
 import './database';
 
