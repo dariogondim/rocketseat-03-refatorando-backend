@@ -1,16 +1,15 @@
 import { Router } from 'express';
-import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 
-import UsersRepository from '@modules/users/infra/typeorm/repositories/UsersRepository';
+import { container } from 'tsyringe';
+
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
 
 const sessionsRouter = Router();
 
-sessionsRouter.post('/', async (request, _response) => {
+sessionsRouter.post('/', async (request, response) => {
     const { email, password } = request.body;
 
-    const usersRepository = new UsersRepository();
-
-    const authenticateUser = new AuthenticateUserService(usersRepository);
+    const authenticateUser = container.resolve(AuthenticateUserService);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { user, token } = await authenticateUser.execute({
@@ -19,6 +18,8 @@ sessionsRouter.post('/', async (request, _response) => {
     });
 
     delete user.password;
+
+    return response.json({ user, token });
 });
 
 export default sessionsRouter;
